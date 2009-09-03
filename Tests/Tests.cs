@@ -50,7 +50,7 @@ namespace Tests
         }
         
         
-        [Test, Ignore]
+        [Test]
         public void CanProvideParameterArrays()
         {
             var messageStorage = container.Resolve<MessageStorage>();

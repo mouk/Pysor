@@ -22,7 +22,7 @@ namespace Pysor
             var runtime = engine.Runtime;
             var scope = runtime.CreateScope();
             
-            Func<string, Type, Type, IDictionary<object, object>, string> action =
+            Func<string, Type, Type, IDictionary<object, object>, object> action =
                 (name, service, impl, parameters) =>
                     {
                         var reg = Component
@@ -33,7 +33,7 @@ namespace Pysor
                         var pairs = parameters.ToList();
                         if (pairs.Count > 0)
                         {
-                            var overrides = pairs.Where(p => p.Value.ToString().StartsWith("${")).ToList();
+                            var overrides = pairs.Where(p => p.Value is LookUp).ToList();
                             var rest = pairs.Except(overrides).ToList();
 
                            var param = GenerateDctionary(rest);
@@ -44,7 +44,8 @@ namespace Pysor
                             reg.ServiceOverrides(GenerateDctionary(overrides));
                         }
                         container.Register(reg);
-                        return "${" + name + "}";
+                        return new LookUp(name);
+                        
                     };
 
             //Inject this function into IronPython runtime
@@ -64,11 +65,37 @@ namespace Pysor
 
             foreach (var pair in pairs)
             {
-                dic[pair.Key.ToString()] = pair.Value;
+                dic[pair.Key.ToString()] = ResolveValue(pair.Value);
             }
 
             return dic;
         }
+
+        private static object ResolveValue(object value)
+        {
+            if (value is LookUp)
+            {
+                return ((LookUp) value).Key;
+            }
+            if (value is Array)
+            {
+                var tempList = ((IEnumerable<object>) value)
+                    .Select(obj => ResolveValue(obj))
+                    .ToList();
+
+                var typeTool = new CommonTypeTool();
+                var type = typeTool.GetCommonType(tempList);
+
+                var arr = Array.CreateInstance(type, tempList.Count);
+
+                tempList.ToArray().CopyTo(arr,0);
+
+                return arr;
+            }
+            return value.ToString();
+        }
+
+
 
         private static void ConfigureEngineWithBaseFunctions(ScriptEngine engine, ScriptScope scope)
         {
@@ -90,16 +117,22 @@ namespace Pysor
 
         }
 
-        private static Parameter GetParameterFromPair(KeyValuePair<object, object> pair)
+        
+        private class LookUp
         {
-            return Parameter
-                .ForKey(pair.Key.ToString())
-                .Eq(ResolveValue(pair.Value));
-        }
+            public string Key { get; set; }
 
-        private static string ResolveValue(object value)
-        {
-            return value.ToString();
+            public LookUp(string key)
+            {
+                Key =  "${" + key + "}";
+            }
+
+            public override string ToString()
+            {
+                return Key;
+            }
         }
     }
+
+
 }

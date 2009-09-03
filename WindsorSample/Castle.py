@@ -10,6 +10,9 @@ from Tests import *
 
 
 
+add( "MessageStorage" , MessageStorage, MessageStorage, {'messages':array('mouk')})
+
+
 add( "StringParsingTitleScraper" , ITitleScraper, StringParsingTitleScraper)
 
 	

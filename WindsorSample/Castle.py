@@ -1,9 +1,13 @@
-﻿def add(name, service, impl, params={}):
-	return addComponent(name, service, impl, params)
-	
-import clr
+﻿
 clr.AddReference("WindsorSample")
+clr.AddReference("Tests")
+
 from WindsorSample import *
+from Tests import *
+
+
+
+
 
 
 add( "StringParsingTitleScraper" , ITitleScraper, StringParsingTitleScraper)

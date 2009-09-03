@@ -48,6 +48,15 @@ namespace Tests
             var obj = container.Resolve<HtmlTitleRetriever>("retriverWithParam");
             Assert.AreNotEqual("", obj.AdditionalMessage);
         }
+        
+        
+        [Test, Ignore]
+        public void CanProvideParameterArrays()
+        {
+            var messageStorage = container.Resolve<MessageStorage>();
+            Assert.IsNotNull(messageStorage.Messages);
+            Assert.IsNotEmpty(messageStorage.Messages);
+        }
 
         [Test]
         public void CanProvideSpecificImplimentationParameters()

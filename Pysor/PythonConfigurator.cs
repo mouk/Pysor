@@ -33,15 +33,20 @@ namespace Pysor
                         var pairs = parameters.ToList();
                         if (pairs.Count > 0)
                         {
-                            var overrides = pairs.Where(p => p.Value is LookUp).ToList();
+                            var overrides = pairs.Where(IsLookup).ToList();
                             var rest = pairs.Except(overrides).ToList();
 
                            var param = GenerateDctionary(rest);
-                                //.Select(pair => GetParameterFromPair(pair))
-                                //.ToDictionary()
-                                //.ToArray();
+                            
+
+
                             reg = reg.DependsOn( param);
-                            reg.ServiceOverrides(GenerateDctionary(overrides));
+
+
+                            //reg.ServiceOverrides(GenerateDctionary(overrides));
+                            if (overrides.Count != 0)
+                                foreach (var serviceOverride in GenerateOverrides(overrides))
+                                    reg.ServiceOverrides(serviceOverride);
                         }
                         container.Register(reg);
                         return new LookUp(name);
@@ -59,6 +64,21 @@ namespace Pysor
             code.Execute(scope);
         }
 
+        private static bool IsLookup(KeyValuePair<object, object> p)
+        {
+            var value = p.Value;
+
+            bool lookup = value is LookUp;
+            if (lookup)
+                return true;
+
+
+            bool isList = value is IList;
+
+            return  isList && ((IList)value)[0] is LookUp;
+        }
+
+
         private static IDictionary GenerateDctionary(List<KeyValuePair<object, object>> pairs)
         {
             var dic = new Dictionary<object, object>();
@@ -67,9 +87,35 @@ namespace Pysor
             {
                 dic[pair.Key.ToString()] = ResolveValue(pair.Value);
             }
-
+            
             return dic;
         }
+
+        private static IEnumerable<ServiceOverride> GenerateOverrides(List<KeyValuePair<object, object>> pairs)
+        {
+            var dic = new Dictionary<object, object>();
+
+            foreach (var pair in pairs)
+            {
+                var ding = ServiceOverride.ForKey(pair.Key.ToString());
+                var val = pair.Value;
+                if (val is string)
+                    yield return ding.Eq((string)val);
+                else if (val is LookUp)
+                    yield return ding.Eq((val as LookUp).Key);
+                else if (val is IList)
+                {
+                    var objectArray = (IList)val;
+                    //TODO what if objects are neither string nor LookUp ?
+                    var stringArray = new List<object>(objectArray.Cast<object>()). Select(obj => obj.ToString()).ToArray();
+                    yield return ding.Eq(stringArray);
+                }
+                else
+                    throw new ApplicationException("Not handeled case");
+            }
+        }
+
+       
 
         private static object ResolveValue(object value)
         {
@@ -124,7 +170,7 @@ namespace Pysor
 
             public LookUp(string key)
             {
-                Key =  "${" + key + "}";
+                Key = key; //"${" + key + "}";
             }
 
             public override string ToString()

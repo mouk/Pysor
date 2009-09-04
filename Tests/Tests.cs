@@ -51,11 +51,24 @@ namespace Tests
         
         
         [Test]
-        public void CanProvideParameterArrays()
+        public void CanProvideParameterStringArrays()
         {
             var messageStorage = container.Resolve<MessageStorage>();
             Assert.IsNotNull(messageStorage.Messages);
             Assert.IsNotEmpty(messageStorage.Messages);
+        }
+        
+        [Test]
+        public void CanProvideParameterLookupArrays()
+        {
+            var messageStorage = container.Resolve<MultipleDowloaderStorage>();
+            Assert.IsNotNull(messageStorage.Dowloader);
+        }
+        [Test]
+        public void CanProvideParameterSingleLookup()
+        {
+            var messageStorage = container.Resolve<DowloaderStorage>();
+            Assert.IsNotNull(messageStorage.Dowloader);
         }
 
         [Test]

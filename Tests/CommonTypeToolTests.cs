@@ -29,8 +29,8 @@ namespace Tests
         [Test]
         public void CanFindTypeOfTwoDescendantObjectsOfSameType()
         {
-            var ret = _theTool.GetCommonType(new object[] {new C(), new B(), new C() });
-            Assert.AreEqual(typeof(B), ret);
+            var type = _theTool.GetCommonType(new object[] {new C(), new B(), new C() });
+            Assert.AreEqual(typeof(B), type);
         }
         
         [Test]
@@ -38,6 +38,13 @@ namespace Tests
         {
             var ret = _theTool.GetCommonType(new object[] {new C(), new B(), new E() });
             Assert.AreEqual(typeof(A), ret);
+        }
+
+        [Test]
+        public void CanDetectObjectAsHierarchyRoot()
+        {
+            var ret = _theTool.GetCommonType(new object[] {new C(), new B(), new E(), "d" });
+            Assert.AreEqual(typeof(object), ret);
         }
     }
 

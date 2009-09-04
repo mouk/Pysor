@@ -16,7 +16,7 @@ add( "MessageStorage" , MessageStorage, MessageStorage, {'messages':array('mouk'
 add( "StringParsingTitleScraper" , ITitleScraper, StringParsingTitleScraper)
 
 	
-add( "HttpFileDownloader", IFileDownloader, HttpFileDownloader)
+downloader = add( "HttpFileDownloader", IFileDownloader, HttpFileDownloader)
 
 add( "retriver", HtmlTitleRetriever, HtmlTitleRetriever)
 
@@ -25,6 +25,15 @@ add( "retriverWithParam", HtmlTitleRetriever, HtmlTitleRetriever,
 
 ftp = add( "ftp", FtpFileDownloader, FtpFileDownloader)
 
+
+
 add( "ftpRetriver", HtmlTitleRetriever, HtmlTitleRetriever,
 	{'downloader': ftp})
+	
+	
 
+
+dings = add( "DowloaderStorage", DowloaderStorage, DowloaderStorage, {'dowloader' : ftp})
+
+
+ftp = add( "MultipleDowloaderStorage", MultipleDowloaderStorage, MultipleDowloaderStorage, {'dowloaders' : [ ftp] })

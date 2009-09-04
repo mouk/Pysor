@@ -10,7 +10,7 @@ from Tests import *
 
 
 
-add( "MessageStorage" , MessageStorage, MessageStorage, {'messages':array('mouk')})
+add( "MessageStorage" , MessageStorage, MessageStorage, {'messages':['first message', 'second message' ]})
 
 
 add( "StringParsingTitleScraper" , ITitleScraper, StringParsingTitleScraper)
@@ -36,4 +36,4 @@ add( "ftpRetriver", HtmlTitleRetriever, HtmlTitleRetriever,
 dings = add( "DowloaderStorage", DowloaderStorage, DowloaderStorage, {'dowloader' : ftp})
 
 
-ftp = add( "MultipleDowloaderStorage", MultipleDowloaderStorage, MultipleDowloaderStorage, {'dowloaders' : [ ftp] })
+add( "MultipleDowloaderStorage", MultipleDowloaderStorage, MultipleDowloaderStorage, {'dowloaders' : [ ftp] })

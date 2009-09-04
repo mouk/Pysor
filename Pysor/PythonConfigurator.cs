@@ -38,8 +38,6 @@ namespace Pysor
 
                            var param = GenerateDctionary(rest);
                             
-
-
                             reg = reg.DependsOn( param);
 
 
@@ -73,9 +71,9 @@ namespace Pysor
                 return true;
 
 
-            bool isList = value is IList;
+            var list = value as IList;
 
-            return  isList && ((IList)value)[0] is LookUp;
+            return  list != null && list[0] is LookUp;
         }
 
 
@@ -123,9 +121,10 @@ namespace Pysor
             {
                 return ((LookUp) value).Key;
             }
-            if (value is Array)
+            var list = value as IEnumerable<object>;
+            if (list != null)
             {
-                var tempList = ((IEnumerable<object>) value)
+                var tempList = list
                     .Select(obj => ResolveValue(obj))
                     .ToList();
 

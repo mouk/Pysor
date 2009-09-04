@@ -55,7 +55,7 @@ namespace Tests
         {
             var messageStorage = container.Resolve<MessageStorage>();
             Assert.IsNotNull(messageStorage.Messages);
-            Assert.IsNotEmpty(messageStorage.Messages);
+            Assert.AreEqual(2, messageStorage.Messages.Length);
         }
         
         [Test]

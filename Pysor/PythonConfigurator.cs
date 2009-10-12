@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Castle.Core;
 using Castle.Core.Configuration;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
@@ -16,19 +17,34 @@ namespace Pysor
 {
     public static class PythonConfigurator
     {
+        private delegate object InjectionDelegate(
+            string name, 
+            Type service, 
+            Type implementation,
+            IDictionary<object, object> parameters,
+            string lifestyle);
+
         public static void ConfigureContainer(IWindsorContainer container, string scriptPath)
         {
             var engine = Python.CreateEngine();
             var runtime = engine.Runtime;
             var scope = runtime.CreateScope();
-            
-            Func<string, Type, Type, IDictionary<object, object>, object> action =
-                (name, service, impl, parameters) =>
+
+            InjectionDelegate action =
+                (name, service, impl, parameters, lifestyle) =>
                     {
                         var reg = Component
                             .For(service)
                             .ImplementedBy(impl)
                             .Named(name);
+
+                        if(!string.IsNullOrEmpty(lifestyle))
+                        {
+                            var lifestyleType =
+                               (LifestyleType)Enum.Parse(typeof(LifestyleType), lifestyle,true);
+                            reg.LifeStyle.Is(lifestyleType);
+                        }
+                        
 
                         var pairs = parameters.ToList();
                         if (pairs.Count > 0)

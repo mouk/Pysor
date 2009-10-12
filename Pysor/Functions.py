@@ -8,8 +8,8 @@ from System import Object
 
 
 
-def add(name, service, impl, params={}):
-	return addComponent(name, service, impl, params)
+def add(name, service, impl, params={},lifestyle=""):
+	return addComponent(name, service, impl, params,lifestyle)
 	
 def array(* params):
 	return System.Array[Object](params)

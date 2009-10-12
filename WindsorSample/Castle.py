@@ -30,10 +30,9 @@ ftp = add( "ftp", FtpFileDownloader, FtpFileDownloader)
 add( "ftpRetriver", HtmlTitleRetriever, HtmlTitleRetriever,
 	{'downloader': ftp})
 	
-	
-
-
 dings = add( "DowloaderStorage", DowloaderStorage, DowloaderStorage, {'dowloader' : ftp})
 
 
 add( "MultipleDowloaderStorage", MultipleDowloaderStorage, MultipleDowloaderStorage, {'dowloaders' : [ ftp] })
+
+add("transient" , Object, Object,lifestyle="transient")

@@ -78,5 +78,14 @@ namespace Tests
             Assert.IsInstanceOf<FtpFileDownloader>(obj.Downloader);
         }
 
+        [Test]
+        public void CanSetLifeStyle()
+        {
+            var obj = container.Resolve<object>("transient");
+            var secondObj = container.Resolve<object>("transient");
+
+            Assert.AreNotEqual(obj,secondObj);
+        }
+
     }
 }

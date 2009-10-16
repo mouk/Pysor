@@ -16,7 +16,7 @@ namespace Tests
         [SetUp]
         public void SetUp()
         {
-             container = new WindsorContainer();
+            container = new WindsorContainer();
             Pysor.PythonConfigurator.ConfigureContainer(container, "Castle.py");
         }
         [TearDown]
@@ -32,7 +32,7 @@ namespace Tests
             Assert.IsNotNull(obj);
             var obj2 = container.Resolve<IFileDownloader>();
             Assert.IsNotNull(obj2);
-            
+
         }
         [Test]
         public void CanConfigureCompositeService()
@@ -48,8 +48,8 @@ namespace Tests
             var obj = container.Resolve<HtmlTitleRetriever>("retriverWithParam");
             Assert.AreNotEqual("", obj.AdditionalMessage);
         }
-        
-        
+
+
         [Test]
         public void CanProvideParameterStringArrays()
         {
@@ -57,7 +57,7 @@ namespace Tests
             Assert.IsNotNull(messageStorage.Messages);
             Assert.AreEqual(2, messageStorage.Messages.Length);
         }
-        
+
         [Test]
         public void CanProvideParameterLookupArrays()
         {
@@ -84,7 +84,21 @@ namespace Tests
             var obj = container.Resolve<object>("transient");
             var secondObj = container.Resolve<object>("transient");
 
-            Assert.AreNotEqual(obj,secondObj);
+            Assert.AreNotEqual(obj, secondObj);
+        }
+
+        [Test]
+        public void CanSetIntegerProperty()
+        {
+            var simpleClass = container.Resolve<SimpleClass>();
+            Assert.AreEqual(10,simpleClass.IntegerValue);
+        }
+
+        [Test]
+        public void CanSetBooleanProperty()
+        {
+            var simpleClass = container.Resolve<SimpleClass>();
+            Assert.AreEqual(true,simpleClass.BooleanValue);
         }
 
     }

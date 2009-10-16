@@ -54,7 +54,7 @@ namespace Pysor
 
                            var param = GenerateDctionary(rest);
                             
-                            reg = reg.DependsOn( param);
+                            reg = reg.DependsOn(param);
 
 
                             //reg.ServiceOverrides(GenerateDctionary(overrides));
@@ -121,7 +121,10 @@ namespace Pysor
                 {
                     var objectArray = (IList)val;
                     //TODO what if objects are neither string nor LookUp ?
-                    var stringArray = new List<object>(objectArray.Cast<object>()). Select(obj => obj.ToString()).ToArray();
+                    var stringArray = new List<object>(objectArray.Cast<object>()).
+                        Select(obj => obj.ToString()).
+                        ToArray();
+
                     yield return ding.Eq(stringArray);
                 }
                 else
@@ -153,7 +156,7 @@ namespace Pysor
 
                 return arr;
             }
-            return value.ToString();
+            return value; //.ToString();
         }
 
 

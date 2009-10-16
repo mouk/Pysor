@@ -33,6 +33,9 @@ add( "ftpRetriver", HtmlTitleRetriever, HtmlTitleRetriever,
 dings = add( "DowloaderStorage", DowloaderStorage, DowloaderStorage, {'dowloader' : ftp})
 
 
+
 add( "MultipleDowloaderStorage", MultipleDowloaderStorage, MultipleDowloaderStorage, {'dowloaders' : [ ftp] })
 
 add("transient" , Object, Object,lifestyle="transient")
+
+add( "SimpleClass", SimpleClass, SimpleClass, {'IntegerValue' : 10, 'BooleanValue': True})

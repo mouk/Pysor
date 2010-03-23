@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.Windsor;
 using NUnit.Framework;
 using WindsorSample;
@@ -17,7 +18,8 @@ namespace Tests
         public void SetUp()
         {
             container = new WindsorContainer();
-            Pysor.PythonConfigurator.ConfigureContainer(container, "Castle.py");
+            container.Kernel.Resolver.AddSubResolver(new ArrayResolver(container.Kernel));
+            Pysor.PythonConfigurator.ConfigureContainer(container, "Castle_Configuration.py");
         }
         [TearDown]
         public void TearDown()

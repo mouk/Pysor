@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using Castle.Core;
 using Castle.Core.Configuration;
+using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using IronPython.Hosting;
@@ -28,6 +29,7 @@ namespace Pysor
         {
             var engine = Python.CreateEngine();
             var runtime = engine.Runtime;
+            //runtime.LoadAssembly(typeof(Castle.MicroKernel.Resolvers.SpecializedResolvers.ArrayResolver).Assembly);
             var scope = runtime.CreateScope();
 
             InjectionDelegate action =
@@ -69,6 +71,8 @@ namespace Pysor
 
             //Inject this function into IronPython runtime
             scope.SetVariable("addComponent", action);
+            scope.SetVariable("kernel", container.Kernel);
+            
             
             ConfigureEngineWithBaseFunctions(engine, scope);
 

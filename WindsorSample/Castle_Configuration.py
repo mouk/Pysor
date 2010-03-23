@@ -7,9 +7,6 @@ from Tests import *
 
 
 
-
-
-
 add( "MessageStorage" , MessageStorage, MessageStorage, {'messages':['first message', 'second message' ]})
 
 
@@ -32,7 +29,8 @@ add( "ftpRetriver", HtmlTitleRetriever, HtmlTitleRetriever,
 	
 dings = add( "DowloaderStorage", DowloaderStorage, DowloaderStorage, {'dowloader' : ftp})
 
-
+from  Castle.MicroKernel.Resolvers.SpecializedResolvers  import ArrayResolver
+kernel.Resolver.AddSubResolver(ArrayResolver(kernel))
 
 add( "MultipleDowloaderStorage", MultipleDowloaderStorage, MultipleDowloaderStorage, {'dowloaders' : [ ftp] })
 

@@ -18,7 +18,7 @@ namespace WindsorSample
             //container.Release(retriever);
 
             IWindsorContainer container = new WindsorContainer();
-            Pysor.PythonConfigurator.ConfigureContainer(container, "Castle.py");
+            Pysor.PythonConfigurator.ConfigureContainer(container, "Castle_Configuration.py");
             var ding = container.Resolve<ITitleScraper>();
         }
     }
